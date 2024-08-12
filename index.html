@@ -61,7 +61,7 @@
                 e.preventDefault()
                 const input = parseInt(e.target.value);
                 
-                if (input) {
+                if (input != NaN) {
                     data[e.target.id] = input
                     objectData = Object.entries(data)
                     total = 0
@@ -80,12 +80,17 @@
         
         function calculateResult() {
             totalBetValue = bet * objectData.length
-                    
+            console.log(totalBetValue);
             for (let i = 0; i < objectData.length; i++) {
-                if (objectData[i][1]) {
+                if (objectData[i][1] != NaN) {
                     onePercent = total / 100 
                     partResult = objectData[i][1] / onePercent
-                    playerResult = (totalBetValue / 100 * partResult) - bet
+                    
+                    playerResult = totalBetValue * (partResult / 100) - bet
+                    console.log(partResult);
+
+                    
+                    
                     if (playerResult > 0) {
                         betResultFields[i].textContent = '+' + playerResult.toFixed(2)
                         betResultFields[i].style.color = 'green'
