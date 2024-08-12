@@ -87,10 +87,10 @@
                     partResult = objectData[i][1] / onePercent
                     playerResult = (totalBetValue / 100 * partResult) - bet
                     if (playerResult > 0) {
-                        betResultFields[i].textContent = '+' + playerResult
+                        betResultFields[i].textContent = '+' + playerResult.toFixed(2)
                         betResultFields[i].style.color = 'green'
                     } else {
-                        betResultFields[i].textContent = playerResult
+                        betResultFields[i].textContent = playerResult.toFixed(2)
                         betResultFields[i].style.color = 'red'
                     }
                     
