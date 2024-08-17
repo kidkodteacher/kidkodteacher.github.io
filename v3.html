@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18xxx</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to bottom, #2c3e50, #34495e);
+            color: #d0e6f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0 20px;
+        }
+        .container {
+            background-color: #1c2833;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #d0e6f7;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 700;
+            color: #d0e6f7;
+        }
+        input[type="number"], output {
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #2e4053;
+            color: #d0e6f7;
+            font-size: 16px;
+        }
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #d0e6f7;
+            height: 5px;
+            border-radius: 5px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 30px;
+            height: 30px;
+            background: url('icons8-steam-engine-100.png') no-repeat;
+            background-size: contain;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 30px;
+            height: 30px;
+            background: url('icons8-steam-engine-100.png') no-repeat;
+            background-size: contain;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #d0e6f7;
+            border: none;
+            border-radius: 5px;
+            color: #1c2833;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #a0c6e0;
+        }
+
+        .output-group {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        output {
+            display: block;
+            margin-bottom: 10px;
+            background-color: #273746;
+            border: 1px solid #555;
+            border-radius: 5px;
+            font-weight: 700;
+        }
+        .output {
+            font-size: 2em;
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 20px;
+            }
+            .container {
+                padding: 15px;
+            }
+            button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="output-group">
+        <label>Всего Игровых Денег</label>
+        <output id="totalContributions" class="total">0</output>
+    </div>
+    <div class="input-group">
+        <label for="participant1">Игрок 1</label>
+        <input type="number" class="gameMoney" name="" id="1" placeholder="Enter score:" oninput="updateSum()">
+        <div class="output"></div>
+        
+    </div>
+    <div class="input-group">
+        <label for="participant2">Игрок 2</label>
+        <input type="number" class="gameMoney" name="" id="2" placeholder="Enter score:" oninput="updateSum()">
+        <div class="output"></div>
+    </div>
+    <div class="input-group">
+        <label for="participant3">Игрок 3</label>
+        <input type="number" class="gameMoney" name="" id="3" placeholder="Enter score:" oninput="updateSum()">
+        <div class="output"></div>
+    </div>
+    <div class="input-group">
+        <label for="participant4">Игрок 4</label>
+        <input type="number" class="gameMoney" name="" id="4" placeholder="Enter score:" oninput="updateSum()">
+        <div class="output"></div>
+    </div>
+    <div class="input-group">
+        <label for="participant5">Игрок 5</label>
+        <input type="number" class="gameMoney" name="" id="5" placeholder="Enter score:" oninput="updateSum()">
+        <div class="output"></div>
+    </div>
+    <div class="input-group">
+        <label for="participant6">Игрок 6</label>
+        <input type="number" class="gameMoney" name="" id="6" placeholder="Enter score:" oninput="updateSum()">
+        <div class="output"></div>
+    </div>
+    <div class="input-group">
+        <label for="playersBet">Ставка Игроков</label>
+        <input type="number" class="bet" id="playersBet">
+    </div>
+
+    <div class="input-group">
+        <label for="adjustmentRange">+% для топов</label>
+        <input type="range" id="adjustmentRange" min="0" max="20" oninput="updateRangeValue(this.value)" value="0" step="1">
+        <output id="valueRange">0</output>
+    </div>
+</div>
+
+<script>
+    let objectData
+    let finalResults = {}
+    inputs = document.querySelectorAll('input.gameMoney')
+    total = 0
+    inputsCount = 0
+    bet = 0
+    data = {}
+    betResultFields = document.querySelectorAll('.output')
+    inputRange = document.querySelector('input[type="range"]')
+    valueRange = document.querySelector("#valueRange");
+
+
+    function range(start, end, step = 1) {
+        // Проверка валидности входных параметров
+        if (step === 0) {
+            throw new Error('Step cannot be zero.');
+        }
+
+        const result = [];
+        if (step > 0) {
+            for (let i = start; i < end; i += step) {
+                result.push(i);
+            }
+        } else {
+            for (let i = start; i > end; i += step) {
+                result.push(i);
+            }
+        }
+        return result;
+    }
+
+    // DEBUG
+    function calculatePercentages(inRange) {
+        const inPer = [];
+        for (let i = 0; i < inputs.length; i++) {
+        input = parseInt(inputs[i].value);
+
+        if (!isNaN(input)) {
+            data[inputs[i].id] = input
+            objectData = Object.entries(data)
+            total = 0
+
+            for (let j = 0; j < objectData.length; j++) {
+                const dataElement = objectData[j][1];
+                total += dataElement
+            }
+
+            totalValue = document.querySelector('.total')
+            totalValue.textContent = total
+        }
+    }
+    // Сортировка по убыванию
+    sortedData = objectData.sort((a, b) => a[1] - b[1]).reverse()
+    const contributions = sortedData;
+
+    // Получение участников которым нужно увеличить и уменьшить процент
+    numToIncrease = Math.floor(sortedData.length / 2)
+    const indicesToIncrease = range(0, numToIncrease, 1);  // Индексы участников, которым нужно увеличить процент
+        for (let i = 0; i < indicesToIncrease.length; i++) {
+            inPer.push(
+                parseInt(inRange) / (i + 1)
+            )
+        }
+
+        return inPer
+    }
+
+    function calculateProportions(contributions) {
+
+        const total = contributions.reduce((sum, value) => sum + value[1], 0);
+        res = []
+
+        for (let i = 0; i < contributions.length; i++) {
+            const text = contributions[i][0]
+            const num = contributions[i][1]
+
+
+            const miniArray = [text, (num / total) * 100]
+            res.push(miniArray)
+        }
+
+
+        return res;
+    }
+
+    function adjustProportions(participants, adjustments) {
+        // Применение увеличения для указанных участников
+
+        adjustments.forEach(adj => {
+            participants[adj.index][1] += adj.change;
+        });
+
+
+        // Пересчитываем общую сумму после увеличения
+        let totalContribution = participants.reduce((acc, p) => acc + p[1], 0);
+
+        // Если сумма превышает 100%, пропорционально уменьшаем остальных участников
+        if (totalContribution > 100) {
+            const excess = totalContribution - 100;
+
+            // Участники, которые не были увеличены
+            let remainingParticipants = participants.filter((_, index) => !adjustments.some(adj => adj.index === index));
+            let remainingSum = remainingParticipants.reduce((acc, p) => acc + p[1], 0);
+
+            // Пропорциональное уменьшение для оставшихся участников
+            remainingParticipants.forEach(p => {
+                const decrease = (p[1] / remainingSum) * excess;
+                p[1] = Math.max(0, p[1] - decrease);
+            });
+
+            // Пересчитываем итоговую сумму после уменьшения
+            totalContribution = participants.reduce((acc, p) => acc + p[1], 0);
+
+            // Если все еще превышает 100%, делаем дополнительную корректировку
+            if (totalContribution > 100) {
+                const correction = totalContribution - 100;
+                for (let p of participants) {
+                    if (p[1] > correction) {
+                        p[1] -= correction;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return participants;
+    }
+
+
+    bet = parseInt(document.querySelector('.bet').value)
+    // for (let i = 0; i < inputs.length; i++) {
+    //     input = parseInt(inputs[i].value);
+
+    //     if (!isNaN(input)) {
+    //         data[inputs[i].id] = input
+    //         objectData = Object.entries(data)
+    //         total = 0
+
+    //         for (let j = 0; j < objectData.length; j++) {
+    //             const dataElement = objectData[j][1];
+    //             total += dataElement
+    //         }
+
+    //         totalValue = document.querySelector('.total')
+    //         totalValue.textContent = total
+    //     }
+    // }
+    // // Сортировка по убыванию
+    // sortedData = objectData.sort((a, b) => a[1] - b[1]).reverse()
+    // const contributions = sortedData;
+
+    // // Получение участников которым нужно увеличить и уменьшить процент
+    // numToIncrease = Math.floor(sortedData.length / 2)
+    // const indicesToIncrease = range(0, numToIncrease, 1);  // Индексы участников, которым нужно увеличить процент
+    // const indicesToDecrease = range(sortedData.length - 1, numToIncrease - 1, -1);
+
+    // // Проценты для увеличения
+    // increasePercentages = calculatePercentages(
+    //     parseInt(inputRange.value)
+    // )
+    // let adjustments = []
+    // for (let i = 0; i < indicesToIncrease.length; i++) {
+    //     adjustments.push(
+    //         { index: indicesToIncrease[i], change: increasePercentages[i] }
+    //     )
+    // }
+
+    // // рассчет процентов
+    // let proportions = calculateProportions(contributions);
+
+    // // перераспределение процентов
+    // objectData = adjustProportions(proportions, adjustments);
+
+    // total = 0
+    // betField = document.querySelectorAll('input.gameMoney')
+
+    // for (let j = 0; j < betField.length; j++) {
+    //     const dataElement = parseInt(betField[j].value);
+    //     if (!isNaN(dataElement)) {
+    //         total += dataElement
+    //     }
+    // }
+
+    totalValue = document.querySelector('.total')
+    totalValue.textContent = total
+
+
+
+
+
+    inputRange.addEventListener("input", (event) => {
+
+        valueRange.textContent = event.target.value;
+        increasePercentages = calculatePercentages(parseInt(event.target.value))
+
+        bet = parseInt(document.querySelector('.bet').value)
+        for (let i = 0; i < inputs.length; i++) {
+            input = parseInt(inputs[i].value);
+
+            if (!isNaN(input)) {
+                data[inputs[i].id] = input
+                objectData = Object.entries(data)
+                total = 0
+
+                for (let j = 0; j < objectData.length; j++) {
+                    const dataElement = objectData[j][1];
+                    total += dataElement
+                }
+
+                totalValue = document.querySelector('.total')
+                totalValue.textContent = total
+            }
+        }
+        // Сортировка по убыванию
+        sortedData = objectData.sort((a, b) => a[1] - b[1]).reverse()
+        const contributions = sortedData;
+        
+        // Получение участников которым нужно увеличить и уменьшить процент
+        numToIncrease = Math.floor(sortedData.length / 2)
+        const indicesToIncrease = range(0, numToIncrease, 1);  // Индексы участников, которым нужно увеличить процент
+
+        // Проценты для увеличения
+        increasePercentages = calculatePercentages(
+            parseInt(inputRange.value)
+        )
+        
+        let adjustments = []
+        for (let i = 0; i < indicesToIncrease.length; i++) {
+            adjustments.push(
+                { index: indicesToIncrease[i], change: increasePercentages[i] }
+            )
+        }
+        
+        // рассчет процентов
+        let proportions = calculateProportions(contributions);
+        
+        // перераспределение процентов
+        objectData = adjustProportions(proportions, adjustments);
+        
+        total = 0
+        betField = document.querySelectorAll('input.gameMoney')
+
+        for (let j = 0; j < betField.length; j++) {
+            const dataElement = parseInt(betField[j].value);
+            if (!isNaN(dataElement)) {
+                total += dataElement
+            }
+        }
+
+        totalValue = document.querySelector('.total')
+        totalValue.textContent = total
+        calculateResult()
+    })
+
+
+
+    document.querySelector('.bet').addEventListener('input', (e) => {
+        e.preventDefault()
+        bet = parseInt(e.target.value)
+        for (let i = 0; i < inputs.length; i++) {
+            input = parseInt(inputs[i].value);
+
+            if (!isNaN(input)) {
+                data[inputs[i].id] = input
+                objectData = Object.entries(data)
+                total = 0
+
+                for (let j = 0; j < objectData.length; j++) {
+                    const dataElement = objectData[j][1];
+                    total += dataElement
+                }
+
+                totalValue = document.querySelector('.total')
+                totalValue.textContent = total
+            }
+        }
+
+        // Сортировка по убыванию
+        sortedData = objectData.sort((a, b) => a[1] - b[1]).reverse()
+        const contributions = sortedData;
+
+        // Получение участников которым нужно увеличить и уменьшить процент
+        numToIncrease = Math.floor(sortedData.length / 2)
+        const indicesToIncrease = range(0, numToIncrease, 1);  // Индексы участников, которым нужно увеличить процент
+
+        // Проценты для увеличения
+        increasePercentages = calculatePercentages(
+            parseInt(inputRange.value)
+        )
+
+        let adjustments = []
+        for (let i = 0; i < indicesToIncrease.length; i++) {
+            adjustments.push(
+                { index: indicesToIncrease[i], change: increasePercentages[i] }
+            )
+        }
+
+        // рассчет процентов
+        let proportions = calculateProportions(contributions);
+
+        // перераспределение процентов
+        objectData = adjustProportions(proportions, adjustments);
+
+        total = 0
+        betField = document.querySelectorAll('input.gameMoney')
+
+        for (let j = 0; j < betField.length; j++) {
+            const dataElement = parseInt(betField[j].value);
+            if (!isNaN(dataElement)) {
+                total += dataElement
+            }
+        }
+
+        totalValue = document.querySelector('.total')
+        totalValue.textContent = total
+        calculateResult()
+    })
+
+
+
+
+    for (let i = 0; i < inputs.length; i++) {
+        inputs[i].addEventListener('input', (e) => {
+            e.preventDefault()
+            bet = parseInt(document.querySelector('.bet').value)
+            for (let i = 0; i < inputs.length; i++) {
+                input = parseInt(inputs[i].value);
+
+                if (!isNaN(input)) {
+                    data[inputs[i].id] = input
+                    objectData = Object.entries(data)
+                    total = 0
+
+                    for (let j = 0; j < objectData.length; j++) {
+                        const dataElement = objectData[j][1];
+                        total += dataElement
+                    }
+
+                    totalValue = document.querySelector('.total')
+                    
+                    totalValue.textContent = total
+                }
+            }
+            // Сортировка по убыванию
+            sortedData = objectData.sort((a, b) => a[1] - b[1]).reverse()
+            const contributions = sortedData;
+
+            // Получение участников которым нужно увеличить и уменьшить процент
+            numToIncrease = Math.floor(sortedData.length / 2)
+            const indicesToIncrease = range(0, numToIncrease, 1);  // Индексы участников, которым нужно увеличить процент
+            const indicesToDecrease = range(sortedData.length - 1, numToIncrease - 1, -1);
+
+            // Проценты для увеличения
+            increasePercentages = calculatePercentages(
+                parseInt(inputRange.value)
+            )
+            let adjustments = []
+            for (let i = 0; i < indicesToIncrease.length; i++) {
+                adjustments.push(
+                    { index: indicesToIncrease[i], change: increasePercentages[i] }
+                )
+            }
+
+            // рассчет процентов
+            let proportions = calculateProportions(contributions);
+
+            // перераспределение процентов
+            objectData = adjustProportions(proportions, adjustments);
+
+            total = 0
+            betField = document.querySelectorAll('input.gameMoney')
+
+            for (let j = 0; j < betField.length; j++) {
+                const dataElement = parseInt(betField[j].value);
+                if (!isNaN(dataElement)) {
+                    total += dataElement
+                }
+            }
+
+            totalValue = document.querySelector('.total')
+            totalValue.textContent = total
+            calculateResult()
+
+
+        })
+    }
+
+    function calculateResult() {
+        totalBetValue = bet * objectData.length
+        playerLength = 0
+        
+        objectData = objectData.sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
+
+        
+
+        for (let i = 0; i < objectData.length; i++) {
+            if (objectData[i][1] != 0) {
+                playerLength++
+            }
+        }
+        preRes = 0
+        console.log(objectData, 'objectdata');
+        console.log(totalBetValue, 'totalBetValue');
+        console.log(total, 'total');
+        
+        for (let i = 0; i < objectData.length; i++) {
+
+            if (!isNaN(objectData[i][1])) {
+
+                playerResult = totalBetValue * (objectData[i][1] / 100) - bet
+
+                
+                if (!isNaN(playerResult)) {
+                
+                    if (playerResult > 0) {
+                        betResultFields[i].textContent = '+' + playerResult.toFixed(2)
+                        betResultFields[i].style.color = 'green'
+                    } else {
+                        betResultFields[i].textContent = playerResult.toFixed(2)
+                        betResultFields[i].style.color = 'red'
+                    }
+                }
+
+            }
+        }
+
+    }
+
+
+</script>
+
+
+</body>
+</html>
