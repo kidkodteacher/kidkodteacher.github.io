@@ -12,13 +12,27 @@
 </head>
 <body>
     <div class="container my-4">
-        <h2 class="mb-3">1862</h2>
+        <h2 class="mb-3">Не Чартерные</h2>
         <ul class="nav nav-tabs" id="tableTabs">
         </ul>
         <div class="tab-content" id="tableContent">
         </div>
     </div>
+    <div class="container my-4">
 
+    <h2 class="mt-5 mb-3">Чартерные 50%</h2>
+        <table class="table table-bordered text-center">
+            <thead>
+                <tr>
+                    <th>Значения</th>
+                    <th>Значения Ячеек</th>
+                </tr>
+            </thead>
+            <tbody id="separateTableBody">
+                <!-- Здесь генерируются строки таблицы -->
+            </tbody>
+        </table>
+</div>
     <script>
         const labels = [50, 60, 70, 80, 90, 100];
         const firstColumnValues = [54, 56, 58, 60, 62, 65, 68, 71, 74, 78, 82, 86, 90, 95, 100, 105, 110, 116, 122, 128, 134, 142, 150, 158, 166, 174, 182, 191, 200];
@@ -83,7 +97,32 @@
                 content.appendChild(tableContainer);
             });
         }
+// Данные для отдельной таблицы
+const separateRowValues = [54, 58, 62, 68, 74, 82, 90, 100];
 
+// Генерация отдельной таблицы
+function generateSeparateTable() {
+    const tbody = document.getElementById('separateTableBody');
+
+    separateRowValues.forEach(rowValue => {
+        const row = document.createElement('tr');
+        const th = document.createElement('th');
+        th.innerText = rowValue;
+        row.appendChild(th);
+
+        const td = document.createElement('td');
+        const greenValue = rowValue * 5;
+        const redValue = rowValue * 10 - 180;
+        td.innerHTML = `<span class="green">${greenValue.toFixed(2)}</span><br><span class="red">${redValue.toFixed(2)}</span>`;
+        row.appendChild(td);
+
+        tbody.appendChild(row);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    generateSeparateTable();
+});
         document.addEventListener('DOMContentLoaded', generateTables);
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
