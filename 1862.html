@@ -10,11 +10,11 @@
         .red { color: red; }
         .highlight { background-color: yellow; font-weight: bold; }
         /* Стиль для закрепления заголовков таблицы */
-        thead th {
+        thead th:not(:first-of-type) {
             position: sticky;
             top: 0;
             z-index: 10;
-            background-color: #f8f9fa;
+            background-color: #92beeb !important;
         }
     </style>
 </head>
@@ -142,7 +142,7 @@
                 // Очистить предыдущие подсветки
                 element.classList.remove('highlight');
                 // Поиск числа
-                if (parseFloat(element.innerText) === parseFloat(searchTerm)) {
+                if (parseFloat(element.innerText) >= parseFloat(searchTerm)) {
                     element.classList.add('highlight');
                 }
             });
