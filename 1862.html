@@ -8,48 +8,58 @@
     <style>
         .green { color: green; }
         .red { color: red; }
+        .highlight { background-color: yellow; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container my-4">
-        <h2 class="mb-3">Не Чартерные</h2>
+        <h2 class="mb-3">Не чартерные</h2>
+        
+        <!-- Поле для поиска -->
+        <div class="input-group mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Введите число для поиска">
+            <button class="btn btn-outline-secondary" type="button" onclick="searchValue()">Найти</button>
+        </div>
+        
         <ul class="nav nav-tabs" id="tableTabs">
+            <!-- Вкладки для таблиц -->
         </ul>
         <div class="tab-content" id="tableContent">
+            <!-- Основные таблицы -->
         </div>
-    </div>
-    <div class="container my-4">
 
-    <h2 class="mt-5 mb-3">Чартерные 50%</h2>
+        <h2 class="mt-5 mb-3">Чартерные</h2>
         <table class="table table-bordered text-center">
             <thead>
                 <tr>
-                    <th>Значения</th>
-                    <th>Значения Ячеек</th>
+                    <th>Пар</th>
+                    <th>Стоимость и Остаток</th>
                 </tr>
             </thead>
             <tbody id="separateTableBody">
                 <!-- Здесь генерируются строки таблицы -->
             </tbody>
         </table>
-</div>
+    </div>
+
     <script>
+        // Данные для основной и отдельной таблиц
         const labels = [50, 60, 70, 80, 90, 100];
         const firstColumnValues = [54, 56, 58, 60, 62, 65, 68, 71, 74, 78, 82, 86, 90, 95, 100, 105, 110, 116, 122, 128, 134, 142, 150, 158, 166, 174, 182, 191, 200];
         const firstRowValues = [1, 2, 3, 4, 5, 6, 7];
+        const separateRowValues = [54, 58, 62, 68, 74, 82, 90, 100];
 
+        // Генерация основной таблицы
         function generateTables() {
             const tabs = document.getElementById('tableTabs');
             const content = document.getElementById('tableContent');
 
             labels.forEach((label, index) => {
-                // Создание вкладки
                 const tab = document.createElement('li');
                 tab.classList.add('nav-item');
                 tab.innerHTML = `<a class="nav-link ${index === 0 ? 'active' : ''}" id="tab-${label}" data-bs-toggle="tab" href="#table-${label}" role="tab">${label}</a>`;
                 tabs.appendChild(tab);
 
-                // Создание контента таблицы
                 const tableContainer = document.createElement('div');
                 tableContainer.classList.add('tab-pane', 'fade');
                 if (index === 0) {
@@ -60,8 +70,7 @@
 
                 const table = document.createElement('table');
                 table.classList.add('table', 'table-bordered', 'text-center');
-                
-                // Заголовок таблицы
+
                 const thead = document.createElement('thead');
                 const headerRow = document.createElement('tr');
                 headerRow.innerHTML = '<th></th>';
@@ -73,7 +82,6 @@
                 thead.appendChild(headerRow);
                 table.appendChild(thead);
 
-                // Тело таблицы
                 const tbody = document.createElement('tbody');
                 firstColumnValues.forEach(colValue => {
                     const row = document.createElement('tr');
@@ -97,33 +105,46 @@
                 content.appendChild(tableContainer);
             });
         }
-// Данные для отдельной таблицы
-const separateRowValues = [54, 58, 62, 68, 74, 82, 90, 100];
 
-// Генерация отдельной таблицы
-function generateSeparateTable() {
-    const tbody = document.getElementById('separateTableBody');
+        // Генерация отдельной таблицы
+        function generateSeparateTable() {
+            const tbody = document.getElementById('separateTableBody');
 
-    separateRowValues.forEach(rowValue => {
-        const row = document.createElement('tr');
-        const th = document.createElement('th');
-        th.innerText = rowValue;
-        row.appendChild(th);
+            separateRowValues.forEach(rowValue => {
+                const row = document.createElement('tr');
+                const th = document.createElement('th');
+                th.innerText = rowValue;
+                row.appendChild(th);
 
-        const td = document.createElement('td');
-        const greenValue = rowValue * 5;
-        const redValue = rowValue * 10 - 180;
-        td.innerHTML = `<span class="green">${greenValue.toFixed(2)}</span><br><span class="red">${redValue.toFixed(2)}</span>`;
-        row.appendChild(td);
+                const td = document.createElement('td');
+                const greenValue = rowValue * 5;
+                const redValue = rowValue * 10 - 180;
+                td.innerHTML = `<span class="green">${greenValue.toFixed(2)}</span><br><span class="red">${redValue.toFixed(2)}</span>`;
+                row.appendChild(td);
 
-        tbody.appendChild(row);
-    });
-}
+                tbody.appendChild(row);
+            });
+        }
 
-document.addEventListener('DOMContentLoaded', () => {
-    generateSeparateTable();
-});
-        document.addEventListener('DOMContentLoaded', generateTables);
+        // Функция поиска значений
+        function searchValue() {
+            const searchTerm = document.getElementById('searchInput').value;
+            const redElements = document.querySelectorAll('.red');
+            
+            redElements.forEach(element => {
+                // Очистить предыдущие подсветки
+                element.classList.remove('highlight');
+                // Поиск числа
+                if (parseFloat(element.innerText) === parseFloat(searchTerm)) {
+                    element.classList.add('highlight');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            generateTables();
+            generateSeparateTable();
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
