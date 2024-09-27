@@ -9,11 +9,18 @@
         .green { color: green; }
         .red { color: red; }
         .highlight { background-color: yellow; font-weight: bold; }
+        /* Стиль для закрепления заголовков таблицы */
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #f8f9fa;
+        }
     </style>
 </head>
 <body>
     <div class="container my-4">
-        <h2 class="mb-3">Не чартерные</h2>
+        <h2 class="mb-3">не Чартер</h2>
         
         <!-- Поле для поиска -->
         <div class="input-group mb-3">
@@ -28,12 +35,12 @@
             <!-- Основные таблицы -->
         </div>
 
-        <h2 class="mt-5 mb-3">Чартерные</h2>
+        <h2 class="mt-5 mb-3">Чартер</h2>
         <table class="table table-bordered text-center">
             <thead>
                 <tr>
                     <th>Пар</th>
-                    <th>Стоимость и Остаток</th>
+                    <th>Стоимость и Капа</th>
                 </tr>
             </thead>
             <tbody id="separateTableBody">
