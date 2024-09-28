@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1862</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .green { color: green; }
-        .red { color: red; }
-        .highlight { background-color: yellow; font-weight: bold; }
+        .green {
+            color: green;
+        }
+
+        .red {
+            color: red;
+        }
+
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+
         /* Стиль для закрепления заголовков таблицы */
         thead th:not(:first-of-type) {
             position: sticky;
@@ -16,18 +27,22 @@
             z-index: 10;
             background-color: #92beeb !important;
         }
+        #table-50 > table > tbody > tr > th:nth-child(1) {
+            background-color: tomato;
+        }
     </style>
 </head>
+
 <body>
     <div class="container my-4">
         <h2 class="mb-3">не Чартер</h2>
-        
+
         <!-- Поле для поиска -->
         <div class="input-group mb-3">
             <input type="text" id="searchInput" class="form-control" placeholder="Введите число для поиска">
             <button class="btn btn-outline-secondary" type="button" onclick="searchValue()">Найти</button>
         </div>
-        
+
         <ul class="nav nav-tabs" id="tableTabs">
             <!-- Вкладки для таблиц -->
         </ul>
@@ -132,12 +147,13 @@
                 tbody.appendChild(row);
             });
         }
+        let startPosition = 0
 
         // Функция поиска значений
         function searchValue() {
             const searchTerm = document.getElementById('searchInput').value;
             const redElements = document.querySelectorAll('.red');
-            
+
             redElements.forEach(element => {
                 // Очистить предыдущие подсветки
                 element.classList.remove('highlight');
@@ -151,8 +167,58 @@
         document.addEventListener('DOMContentLoaded', () => {
             generateTables();
             generateSeparateTable();
+            startPosition = document.querySelector('thead th:not(:first-of-type)').getBoundingClientRect().top
+            startPositionX = document.querySelector('#table-50 > table > tbody > tr > th:nth-child(1)').getBoundingClientRect().left
+            
+            checkVisibility();
         });
+
+        function checkVisibility() {
+            const element = document.querySelector('table.table');
+            const rect = element.getBoundingClientRect();
+
+            const isVisible = (
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+
+            if (!isVisible) {
+                window.addEventListener('scroll', checkFixed);
+                
+            } else {
+                tableRow = document.querySelector('thead th:not(:first-of-type)')
+                tableRow.style.position = 'sticky'
+            }
+        }
+
+        function checkFixed(event) {
+            tableRow = document.querySelector('#table-50 > table > thead > tr')   ;
+            tableColumns = document.querySelectorAll('#table-50 > table > tbody > tr > th:nth-child(1)');
+            wXoff = window.pageXOffset;
+            for (let i = 0; i < tableColumns.length; i++) {
+                columnRect = tableColumns[i].getBoundingClientRect()
+                
+                if (wXoff <= startPositionX) {
+                    tableColumns[i].style.position = 'static'
+                }
+                else if (wXoff >= columnRect.left) {
+                    tableColumns[i].style.position = 'relative'
+                    tableColumns[i].style.left = window.pageXOffset - startPositionX + 'px'
+                } 
+            }
+            rect = tableRow.getBoundingClientRect()
+            wYoff = window.pageYOffset
+
+            
+            if (wYoff <= startPosition) {
+                tableRow.style.position = 'static'
+            }
+            else if (wYoff >= rect.top) {
+                tableRow.style.position = 'relative'
+                tableRow.style.top = window.pageYOffset - startPosition + 'px'
+            } 
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
