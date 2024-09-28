@@ -180,8 +180,8 @@
             const isVisible = (
                 rect.right <= (window.innerWidth || document.documentElement.clientWidth)
             );
-
-            if (!isVisible) {
+            bodyWidth = document.querySelector('body').clientWidth
+            if (!isVisible || bodyWidth < rect.right) {
                 window.addEventListener('scroll', checkFixed);
                 
             } else {
