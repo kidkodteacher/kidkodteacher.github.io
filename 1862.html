@@ -16,6 +16,11 @@
         }
 
         .highlight {
+            background-color: #a7ff83;
+            color: #071a52;
+            font-weight: bold;
+        }
+        .exactly {
             background-color: yellow;
             font-weight: bold;
         }
@@ -38,10 +43,10 @@
         <h2 class="mb-3">не Чартер</h2>
 
         <!-- Поле для поиска -->
-        <div class="input-group mb-3">
+        <form class="input-group mb-3 form-submit">
             <input type="number" id="searchInput" class="form-control" placeholder="Введите число для поиска">
-            <button class="btn btn-outline-secondary" type="button" onclick="searchValue()">Найти</button>
-        </div>
+            <button class="btn btn-outline-secondary" type="submit">Найти</button>
+        </form>
 
         <ul class="nav nav-tabs" id="tableTabs">
             <!-- Вкладки для таблиц -->
@@ -150,18 +155,26 @@
         let startPosition = 0
 
         // Функция поиска значений
-        function searchValue() {
+        document.querySelector('.form-submit').addEventListener('submit', (e) => {
+
+            e.preventDefault()
             const searchTerm = document.getElementById('searchInput').value;
             const redElements = document.querySelectorAll('.red');
-
+    
             redElements.forEach(element => {
                 // Очистить предыдущие подсветки
                 element.classList.remove('highlight');
+                element.classList.remove('exactly');
                 // Поиск числа
-                if (parseFloat(element.innerText) >= parseFloat(searchTerm)) {
+                if (parseFloat(element.innerText) == parseFloat(searchTerm)) {
+                    element.classList.add('exactly');
+                } else if (parseFloat(element.innerText) >= parseFloat(searchTerm)) {
                     element.classList.add('highlight');
                 }
             });
+
+        })
+        function searchValue(e) {
         }
 
         document.addEventListener('DOMContentLoaded', () => {
