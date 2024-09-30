@@ -83,7 +83,7 @@
                 <input type="number" id="percent" class="form-control" placeholder="Введите процент акций" required>
             </div>
             <div class="mb-3">
-                <label for="profitability" class="form-label">Доходность:</label>
+                <label for="profitability" class="form-label">Доходность с акции:</label>
                 <input type="number" id="profitability" class="form-control" placeholder="Введите доходность" required>
             </div>
             <button type="button" class="btn btn-primary w-100" onclick="calculate()">Рассчитать</button>
@@ -92,7 +92,7 @@
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title">Результаты:</h2>
-                <p>Текущий доход: <span id="resultIncome" class="fw-bold"></span></p>
+                <p>Текущий доход (всего): <span id="resultIncome" class="fw-bold"></span></p>
                 <p>1 ОР: <span id="resultSecond" class="fw-bold"></span></p>
                 <p>2 ОР: <span id="resultThird" class="fw-bold"></span></p>
             </div>
@@ -108,7 +108,7 @@
 
 
             // Рассчитываем значения
-            const secondValue = (profitability / percent) * 10;
+            const secondValue = (profitability * (percent / 100)) * 100;
             const thirdValue = secondValue * 2;
 
             // Выводим результаты
