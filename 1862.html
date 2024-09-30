@@ -20,6 +20,7 @@
             color: #071a52;
             font-weight: bold;
         }
+
         .exactly {
             background-color: yellow;
             font-weight: bold;
@@ -32,7 +33,8 @@
             z-index: 10;
             background-color: #92beeb !important;
         }
-        table > tbody > tr > th:nth-child(1) {
+
+        table>tbody>tr>th:nth-child(1) {
             background-color: tomato;
         }
     </style>
@@ -68,6 +70,53 @@
             </tbody>
         </table>
     </div>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Калькулятор доходности</h1>
+        
+        <form id="calcForm" class="mb-4">
+            <div class="mb-3">
+                <label for="income" class="form-label">Доход:</label>
+                <input type="number" id="income" class="form-control" placeholder="Введите доход" required>
+            </div>
+            <div class="mb-3">
+                <label for="percent" class="form-label">Процент акций (%):</label>
+                <input type="number" id="percent" class="form-control" placeholder="Введите процент акций" required>
+            </div>
+            <div class="mb-3">
+                <label for="profitability" class="form-label">Доходность:</label>
+                <input type="number" id="profitability" class="form-control" placeholder="Введите доходность" required>
+            </div>
+            <button type="button" class="btn btn-primary w-100" onclick="calculate()">Рассчитать</button>
+        </form>
+
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Результаты:</h2>
+                <p>Текущий доход: <span id="resultIncome" class="fw-bold"></span></p>
+                <p>1 ОР: <span id="resultSecond" class="fw-bold"></span></p>
+                <p>2 ОР: <span id="resultThird" class="fw-bold"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            // Получаем значения из полей ввода
+            const income = parseFloat(document.getElementById('income').value);
+            const percent = parseFloat(document.getElementById('percent').value);
+            const profitability = parseFloat(document.getElementById('profitability').value);
+
+
+            // Рассчитываем значения
+            const secondValue = (profitability / percent) * 10;
+            const thirdValue = secondValue * 2;
+
+            // Выводим результаты
+            document.getElementById('resultIncome').innerText = income.toFixed(2);
+            document.getElementById('resultSecond').innerText = secondValue.toFixed(2);
+            document.getElementById('resultThird').innerText = thirdValue.toFixed(2);
+        }
+    </script>
 
     <script>
         // Данные для основной и отдельной таблиц
@@ -160,7 +209,7 @@
             e.preventDefault()
             const searchTerm = document.getElementById('searchInput').value;
             const redElements = document.querySelectorAll('.red');
-    
+
             redElements.forEach(element => {
                 // Очистить предыдущие подсветки
                 element.classList.remove('highlight');
@@ -182,7 +231,7 @@
             generateSeparateTable();
             startPosition = document.querySelector('thead th:not(:first-of-type)').getBoundingClientRect().top
             startPositionX = document.querySelector('#table-50 > table > tbody > tr > th:nth-child(1)').getBoundingClientRect().left
-            
+
             checkVisibility();
         });
 
@@ -196,7 +245,7 @@
             bodyWidth = document.querySelector('body').clientWidth
             if (!isVisible || bodyWidth < rect.right) {
                 window.addEventListener('scroll', checkFixed);
-                
+
             } else {
                 tableRow = document.querySelector('thead th:not(:first-of-type)')
                 tableRow.style.position = 'sticky'
@@ -204,31 +253,31 @@
         }
 
         function checkFixed(event) {
-            tableRow = document.querySelector('#table-50 > table > thead > tr')   ;
+            tableRow = document.querySelector('#table-50 > table > thead > tr');
             tableColumns = document.querySelectorAll('#table-50 > table > tbody > tr > th:nth-child(1)');
             wXoff = window.pageXOffset;
             for (let i = 0; i < tableColumns.length; i++) {
                 columnRect = tableColumns[i].getBoundingClientRect()
-                
+
                 if (wXoff <= startPositionX) {
                     tableColumns[i].style.position = 'static'
                 }
                 else if (wXoff >= columnRect.left) {
                     tableColumns[i].style.position = 'relative'
                     tableColumns[i].style.left = window.pageXOffset - startPositionX + 'px'
-                } 
+                }
             }
             rect = tableRow.getBoundingClientRect()
             wYoff = window.pageYOffset
 
-            
+
             if (wYoff <= startPosition) {
                 tableRow.style.position = 'static'
             }
             else if (wYoff >= rect.top) {
                 tableRow.style.position = 'relative'
                 tableRow.style.top = window.pageYOffset - startPosition + 'px'
-            } 
+            }
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
