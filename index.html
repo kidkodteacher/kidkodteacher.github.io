@@ -1,106 +1,55 @@
-<html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Rules Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .output, .total {
-            font-size: 3rem;
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f3f4f6;
         }
-        .total, .bet {
-            color: blue;
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
     </style>
-    Всего Игровых Денег:
-    <div class="total"></div>
-    <p>
-        Игрок 1:
-        <input type="number" class="gameMoney" name="" id="one">
-        <div class="output"></div>
-    </p>
-    <p>
-        Игрок 2:
-        <input type="number" class="gameMoney" name="" id="two">
-        <div class="output"></div>
-    </p>
-    <p>
-        Игрок 3:
-        <input type="number" class="gameMoney" name="" id="three">
-        <div class="output"></div>
-    </p>
-    <p>
-        Игрок 4:
-        <input type="number" class="gameMoney" name="" id="four">
-        <div class="output"></div>
-    </p>
-    <p>
-        Игрок 5:
-        <input type="number" class="gameMoney" name="" id="five">
-        <div class="output"></div>
-    </p>
-    Ставка Игроков:
-    <input type="number" class="bet"></input>
+</head>
+<body class="container mx-auto px-4 py-8 max-w-4xl">
+    <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">Game Rules Hub</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- 1822PNW Card -->
+        <a href="1822pnw.html" class="card p-6 block">
+            <h2 class="text-2xl font-semibold mb-2 text-blue-600">1822PNW</h2>
+            <p class="text-gray-600">Правила игры 1822PNW</p>
+        </a>
 
+        <!-- Future Game Cards Template -->
+        <!-- Uncomment and modify these as you add more games -->
+        <!--
+        <a href="game2.html" class="card p-6 block">
+            <h2 class="text-2xl font-semibold mb-2 text-blue-600">Game 2</h2>
+            <p class="text-gray-600">Description of Game 2</p>
+        </a>
 
-    <script>
-        let objectData
-        inputs = document.querySelectorAll('input.gameMoney')
-        total = 0
-        inputsCount = 0
-        bet = 0
+        <a href="game3.html" class="card p-6 block">
+            <h2 class="text-2xl font-semibold mb-2 text-blue-600">Game 3</h2>
+            <p class="text-gray-600">Description of Game 3</p>
+        </a>
+        -->
+    </div>
 
-        document.querySelector('.bet').addEventListener('input', (e) => {
-            e.preventDefault()
-            bet = parseInt(e.target.value)
-            calculateResult()
-        })
-
-
-        betResultFields = document.querySelectorAll('.output')
-
-        data = {}
-
-        for (let i = 0; i < inputs.length; i++) {
-            inputs[i].addEventListener('input', (e) => {
-                e.preventDefault()
-                const input = parseInt(e.target.value);
-                
-                if (input != NaN) {
-                    data[e.target.id] = input
-                    objectData = Object.entries(data)
-                    total = 0
-                    
-                    for (let j = 0; j < objectData.length; j++) {
-                        const dataElement = objectData[j][1];
-                        total += dataElement
-                    }
-
-                    totalValue = document.querySelector('.total')
-                    totalValue.textContent = total
-                    calculateResult()
-                }
-            })
-        }
-        
-        function calculateResult() {
-            totalBetValue = bet * objectData.length
-            console.log(totalBetValue);
-            for (let i = 0; i < objectData.length; i++) {
-                if (objectData[i][1] != NaN) {
-                    onePercent = total / 100 
-                    partResult = objectData[i][1] / onePercent
-                    
-                    playerResult = totalBetValue * (partResult / 100) - bet
-                    console.log(partResult);
-
-                    
-                    
-                    if (playerResult > 0) {
-                        betResultFields[i].textContent = '+' + playerResult.toFixed(2)
-                        betResultFields[i].style.color = 'green'
-                    } else {
-                        betResultFields[i].textContent = playerResult.toFixed(2)
-                        betResultFields[i].style.color = 'red'
-                    }
-                    
-                }
-            }
-        }     
-    </script>
-</html>
+    <div class="mt-8 text-center text-sm text-gray-500">
+        <p>Click on a game to view its rules</p>
+    </div>
+</body>
+</html> 
