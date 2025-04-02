@@ -1,286 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1862</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .green {
-            color: green;
-        }
-
-        .red {
-            color: red;
-        }
-
-        .highlight {
-            background-color: #a7ff83;
-            color: #071a52;
-            font-weight: bold;
-        }
-
-        .exactly {
-            background-color: yellow;
-            font-weight: bold;
-        }
-
-        /* Стиль для закрепления заголовков таблицы */
-        thead th:not(:first-of-type) {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            background-color: #92beeb !important;
-        }
-
-        table>tbody>tr>th:nth-child(1) {
-            background-color: tomato;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container my-4">
-        <h2 class="mb-3">не Чартер</h2>
-
-        <!-- Поле для поиска -->
-        <form class="input-group mb-3 form-submit">
-            <input type="number" id="searchInput" class="form-control" placeholder="Введите число для поиска">
-            <button class="btn btn-outline-secondary" type="submit">Найти</button>
-        </form>
-
-        <ul class="nav nav-tabs" id="tableTabs">
-            <!-- Вкладки для таблиц -->
-        </ul>
-        <div class="tab-content" id="tableContent">
-            <!-- Основные таблицы -->
-        </div>
-
-        <h2 class="mt-5 mb-3">Чартер</h2>
-        <table class="table table-bordered text-center">
-            <thead>
-                <tr>
-                    <th>Пар</th>
-                    <th>Стоимость и Капа</th>
-                </tr>
-            </thead>
-            <tbody id="separateTableBody">
-                <!-- Здесь генерируются строки таблицы -->
-            </tbody>
-        </table>
-    </div>
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Калькулятор доходности</h1>
-        
-        <form id="calcForm" class="mb-4">
-            <div class="mb-3">
-                <label for="income" class="form-label">Доход:</label>
-                <input type="number" id="income" class="form-control" placeholder="Введите доход" required>
-            </div>
-            <div class="mb-3">
-                <label for="percent" class="form-label">Процент акций (%):</label>
-                <input type="number" id="percent" class="form-control" placeholder="Введите процент акций" required>
-            </div>
-            <div class="mb-3">
-                <label for="profitability" class="form-label">Доходность с акции:</label>
-                <input type="number" id="profitability" class="form-control" placeholder="Введите доходность" required>
-            </div>
-            <button type="button" class="btn btn-primary w-100" onclick="calculate()">Рассчитать</button>
-        </form>
-
-        <div class="card">
-            <div class="card-body">
-                <h2 class="card-title">Результаты:</h2>
-                <p>Текущий доход (всего): <span id="resultIncome" class="fw-bold"></span></p>
-                <p>1 ОР: <span id="resultSecond" class="fw-bold"></span></p>
-                <p>2 ОР: <span id="resultThird" class="fw-bold"></span></p>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function calculate() {
-            // Получаем значения из полей ввода
-            const income = parseFloat(document.getElementById('income').value);
-            const percent = parseFloat(document.getElementById('percent').value);
-            const profitability = parseFloat(document.getElementById('profitability').value);
-
-
-            // Рассчитываем значения
-            const secondValue = (profitability * (percent / 100)) * 100;
-            const thirdValue = secondValue * 2;
-
-            // Выводим результаты
-            document.getElementById('resultIncome').innerText = income.toFixed(2);
-            document.getElementById('resultSecond').innerText = secondValue.toFixed(2);
-            document.getElementById('resultThird').innerText = thirdValue.toFixed(2);
-        }
-    </script>
-
-    <script>
-        // Данные для основной и отдельной таблиц
-        const labels = [50, 60, 70, 80, 90, 100];
-        const firstColumnValues = [54, 56, 58, 60, 62, 65, 68, 71, 74, 78, 82, 86, 90, 95, 100, 105, 110, 116, 122, 128, 134, 142, 150, 158, 166, 174, 182, 191, 200];
-        const firstRowValues = [1, 2, 3, 4, 5, 6, 7];
-        const separateRowValues = [54, 58, 62, 68, 74, 82, 90, 100];
-
-        // Генерация основной таблицы
-        function generateTables() {
-            const tabs = document.getElementById('tableTabs');
-            const content = document.getElementById('tableContent');
-
-            labels.forEach((label, index) => {
-                const tab = document.createElement('li');
-                tab.classList.add('nav-item');
-                tab.innerHTML = `<a class="nav-link ${index === 0 ? 'active' : ''}" id="tab-${label}" data-bs-toggle="tab" href="#table-${label}" role="tab">${label}</a>`;
-                tabs.appendChild(tab);
-
-                const tableContainer = document.createElement('div');
-                tableContainer.classList.add('tab-pane', 'fade');
-                if (index === 0) {
-                    tableContainer.classList.add('show', 'active');
-                }
-                tableContainer.id = `table-${label}`;
-                tableContainer.role = 'tabpanel';
-
-                const table = document.createElement('table');
-                table.classList.add('table', 'table-bordered', 'text-center');
-
-                const thead = document.createElement('thead');
-                const headerRow = document.createElement('tr');
-                headerRow.innerHTML = '<th></th>';
-                firstRowValues.forEach(value => {
-                    const th = document.createElement('th');
-                    th.innerText = value;
-                    headerRow.appendChild(th);
-                });
-                thead.appendChild(headerRow);
-                table.appendChild(thead);
-
-                const tbody = document.createElement('tbody');
-                firstColumnValues.forEach(colValue => {
-                    const row = document.createElement('tr');
-                    const th = document.createElement('th');
-                    th.innerText = colValue;
-                    row.appendChild(th);
-
-                    firstRowValues.forEach(rowValue => {
-                        const td = document.createElement('td');
-                        const greenValue = colValue * (label / 10);
-                        const redValue = greenValue - (rowValue * 40);
-                        td.innerHTML = `<span class="green">${greenValue.toFixed(2)}</span><br><span class="red">${redValue.toFixed(2)}</span>`;
-                        row.appendChild(td);
-                    });
-
-                    tbody.appendChild(row);
-                });
-
-                table.appendChild(tbody);
-                tableContainer.appendChild(table);
-                content.appendChild(tableContainer);
-            });
-        }
-
-        // Генерация отдельной таблицы
-        function generateSeparateTable() {
-            const tbody = document.getElementById('separateTableBody');
-
-            separateRowValues.forEach(rowValue => {
-                const row = document.createElement('tr');
-                const th = document.createElement('th');
-                th.innerText = rowValue;
-                row.appendChild(th);
-
-                const td = document.createElement('td');
-                const greenValue = rowValue * 5;
-                const redValue = rowValue * 10 - 180;
-                td.innerHTML = `<span class="green">${greenValue.toFixed(2)}</span><br><span class="red">${redValue.toFixed(2)}</span>`;
-                row.appendChild(td);
-
-                tbody.appendChild(row);
-            });
-        }
-        let startPosition = 0
-
-        // Функция поиска значений
-        document.querySelector('.form-submit').addEventListener('submit', (e) => {
-
-            e.preventDefault()
-            const searchTerm = document.getElementById('searchInput').value;
-            const redElements = document.querySelectorAll('.red');
-
-            redElements.forEach(element => {
-                // Очистить предыдущие подсветки
-                element.classList.remove('highlight');
-                element.classList.remove('exactly');
-                // Поиск числа
-                if (parseFloat(element.innerText) == parseFloat(searchTerm)) {
-                    element.classList.add('exactly');
-                } else if (parseFloat(element.innerText) >= parseFloat(searchTerm)) {
-                    element.classList.add('highlight');
-                }
-            });
-
-        })
-        function searchValue(e) {
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            generateTables();
-            generateSeparateTable();
-            startPosition = document.querySelector('thead th:not(:first-of-type)').getBoundingClientRect().top
-            startPositionX = document.querySelector('#table-50 > table > tbody > tr > th:nth-child(1)').getBoundingClientRect().left
-
-            checkVisibility();
-        });
-
-        function checkVisibility() {
-            const element = document.querySelector('table.table');
-            const rect = element.getBoundingClientRect();
-
-            const isVisible = (
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-            );
-            bodyWidth = document.querySelector('body').clientWidth
-            if (!isVisible || bodyWidth < rect.right) {
-                window.addEventListener('scroll', checkFixed);
-
-            } else {
-                tableRow = document.querySelector('thead th:not(:first-of-type)')
-                tableRow.style.position = 'sticky'
-            }
-        }
-
-        function checkFixed(event) {
-            tableRow = document.querySelector('#table-50 > table > thead > tr');
-            tableColumns = document.querySelectorAll('#table-50 > table > tbody > tr > th:nth-child(1)');
-            wXoff = window.pageXOffset;
-            for (let i = 0; i < tableColumns.length; i++) {
-                columnRect = tableColumns[i].getBoundingClientRect()
-
-                if (wXoff <= startPositionX) {
-                    tableColumns[i].style.position = 'static'
-                }
-                else if (wXoff >= columnRect.left) {
-                    tableColumns[i].style.position = 'relative'
-                    tableColumns[i].style.left = window.pageXOffset - startPositionX + 'px'
-                }
-            }
-            rect = tableRow.getBoundingClientRect()
-            wYoff = window.pageYOffset
-
-
-            if (wYoff <= startPosition) {
-                tableRow.style.position = 'static'
-            }
-            else if (wYoff >= rect.top) {
-                tableRow.style.position = 'relative'
-                tableRow.style.top = window.pageYOffset - startPosition + 'px'
-            }
-        }
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+<!-- Start of Selection -->
+<div>
+    <h2>Подготовка:</h2>
+    <p>Микс 16 контор. Добавляем 6 фрейтов и 5/5 локалок с экспрессами.</p>
+    
+    <h2>Чартер раунд:</h2>
+    <p>Можно стартануть до 50% выкупив (минимум 30%). Если не выкупил 50% в ЧР то в стоке можно докупить. До конца стока обязательно контора должна стартануть.</p>
+    <p>В ЧР стартуем с полной капитализацией.</p>
+    <p>Нужно купить 3 бабышки за 180.</p>
+    
+    <h2>СР:</h2>
+    <p>Флоат 50%. Старутем не чартерные, нужно купить минимум 2 бабышки по 40 за каждую.</p>
+    <p>Чартерная - Полная капа, Не чартерная - Частичная.</p>
+    
+    <h2>Мерж/Поглощение:</h2>
+    <p>Мерж в начале хода, Аквизишн в конце. В любом случае выбираешь какая контора останется на поле (важно для домашней станции).</p>
+    <ol>
+        <li>Все акции из ИПО падают в банк.</li>
+        <li>Определяем новую цену - половина большей цены + меньшая цена. Если нет поездов то цена делится на 2.</li>
+        <li>Далее все скидывают половину в банк начиная с мертвой конторы (конторы которые участвуют тоже скидывают).</li>
+        <li>Меняем 1 к 1 (обычные и опционы) начиная с того кто начал.</li>
+        <li>Если остались акции в мертвой, продаем по текущей цене (опционы по половине).</li>
+        <li>Теперь выкупаем опционы за половину цены.</li>
+    </ol>
+    
+    <h2>Если стартанул с меньше чем 60% то выкупить президентский будет стоить:</h2>
+    <ul>
+        <li>50% - Выкуп половина новой цены шейра, продажа за 2.5x новой цены.</li>
+        <li>40% - Выкуп полная стоимость, продажа х2 от новой цены.</li>
+        <li>30% - Выкуп х1.5, продажа х1.</li>
+    </ul>
+    
+    <h2>Порядок хода:</h2>
+    <p>Мерж - Построить (2 желтых/1 N-тайл/1 Лондон/грейд/поставить мини станцию) - Поставить бабышку - поезда - ревеню - покупка - выкуп акции из банк пула - Поглощение.</p>
+    
+    <h2>Поезда:</h2>
+    <p>Обязан иметь поезд в конце ОР.</p>
+    <p>Максимум 3 гарантии на поезд - 50 каждая.</p>
+    <p>Можно купить у другой конторы - Текущая эпоха х1, Прошлая эпоха х0.5.</p>
+    <p>Если нет денег то рекапитализация (процесс скидывания половины акций в банк *из ИПО тоже все в банк скидывается).</p>
+</div>
+<!-- End of Selection -->
